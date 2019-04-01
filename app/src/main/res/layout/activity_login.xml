@@ -63,7 +63,7 @@
 
     <Button
         android:id="@+id/goToHome"
-        android:onClick="goToHome"
+        android:onClick="goToLogged"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:gravity="center"
