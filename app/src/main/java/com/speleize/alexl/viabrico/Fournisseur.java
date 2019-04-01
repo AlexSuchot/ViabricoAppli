@@ -1,3 +1,5 @@
+package com.speleize.alexl.viabrico;
+
 public class Fournisseur {
     private String Name;
     private String Description;
