@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".FournisseursActivity" />
         <activity android:name=".CreateFournisseurActivity" />
-        <activity android:name=".SelectedFournisseurAcitivy"></activity>
+        <activity android:name=".SelectedFournisseurAcitivy" />
+        <activity android:name=".LoggedActivity"></activity>
     </application>
 
 </manifest>
