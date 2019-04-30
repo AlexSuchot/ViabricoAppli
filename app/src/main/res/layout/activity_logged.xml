@@ -4,6 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2c3e50"
     tools:context=".LoggedActivity">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_logo_foreground"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ViaBrico"
+        android:textSize="30sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="120dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/goToFournisseur"
+        android:onClick="goToFournisseur"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:text="Fournisseurs"
+        android:textFontWeight="600"
+        android:background="@drawable/buttondesign"
+        android:layout_marginHorizontal="70dp"
+        android:layout_marginTop="300dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/goToCreate"
+        android:onClick="goToCreate"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textColor="#FFF"
+        android:text="Nouveaux fournisseurs"
+        android:textFontWeight="600"
+        android:background="@drawable/buttondesign"
+        android:layout_marginHorizontal="70dp"
+        android:layout_marginTop="420dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
