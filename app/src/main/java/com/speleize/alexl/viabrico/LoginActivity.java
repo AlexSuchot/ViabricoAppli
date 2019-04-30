@@ -10,12 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-
-import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -24,8 +20,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText password;
     private Button loginButton;
     private TextView title;
-
-    private String url = "https://viabrico.herokuapp.com/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
                 RequestParams params = new RequestParams();
                 params.put("email", strEmail);
                 params.put("password", strPassword);
-                client.post("https://viabrico.herokuapp.com/login", params, new TextHttpResponseHandler() {
 
+                Request.post("login", params, new TextHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String responseBody) {
                         // called when response HTTP status is "200 OK"
@@ -74,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("status code :", "status code :" + statusCode);
                     }
                 });
-
             }
         });
     }
 }
+
