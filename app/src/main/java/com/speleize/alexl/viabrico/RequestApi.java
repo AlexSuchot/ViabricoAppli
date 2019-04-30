@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -15,31 +16,39 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class AsynchronousGet {
+public class RequestApi {
 
     public String url;
     public RequestBody body;
     public final OkHttpClient client;
+    public MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    public String strEmail;
+    public String strPassword;
 
-    public AsynchronousGet(String url, String body) {
+    public RequestApi(String url, String body, String strEmail, String strPassword) {
         this.url = url;
+        this.strEmail = strEmail;
+        this.strPassword = strPassword;
         this.body = RequestBody.create(JSON, body);
         client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .build();
     }
 
-
-
-    public MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
-
     public void run() throws Exception {
+        String email = strEmail;
+        String password = strPassword;
+        RequestBody body = new FormBody.Builder()
+                .add("email", email)
+                .add("password", password)
+                .build();
+
         Request request = new Request.Builder()
-                .url(this.url)
-                .post(this.body)
+                .url("https://viabrico.herokuapp.com/suppliers")
+                .header("Authorization", "Bearer ")
+                .post(body)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

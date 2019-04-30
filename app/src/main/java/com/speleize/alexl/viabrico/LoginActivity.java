@@ -1,5 +1,6 @@
 package com.speleize.alexl.viabrico;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,19 +9,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button loginButton;
     private TextView title;
+
+    private String url = "https://viabrico.herokuapp.com/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +38,43 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+                // Email and password to string :
                 String strEmail = email.getText().toString();
                 String strPassword = password.getText().toString();
-                AsynchronousGet asynchronousGet = new AsynchronousGet("https://viabrico.herokuapp.com/register", "{'email':'" + strEmail + "','password':'" + strPassword + "'}");
-                try {
-                    asynchronousGet.run();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+                AsyncHttpClient client = new AsyncHttpClient();
+                client.setConnectTimeout(60000);
+                client.setResponseTimeout(60000);
+                RequestParams params = new RequestParams();
+                params.put("email", strEmail);
+                params.put("password", strPassword);
+                client.post("https://viabrico.herokuapp.com/login", params, new TextHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                        // called when response HTTP status is "200 OK"
+                        Log.d("res", "code: " + statusCode);
+                        Log.d("res", "headers: " + headers.toString());
+
+                        Log.d("res", "res:" + responseBody);
+                        Log.d("res", "Ah shit here we go again:" + responseBody);
+
+                        Intent intent = new Intent(LoginActivity.this, LoggedActivity.class);
+
+                        intent.putExtra("token :", responseBody);
+                        LoginActivity.this.startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
+                        Log.d("res", "res: " + error);
+
+                        Log.d("status code :", "status code :" + statusCode);
+                    }
+                });
+
             }
         });
     }
