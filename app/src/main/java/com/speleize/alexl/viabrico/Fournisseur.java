@@ -1,57 +1,57 @@
 package com.speleize.alexl.viabrico;
 
 public class Fournisseur {
-    private String Name;
-    private String Description;
-    private String Address;
-    private Integer Number;
-    private String Email;
+    private String name;
+    private String description;
+    private String address;
+    private Integer phone;
+    private String mail;
+
+    public Fournisseur(String name, String description, String address, Integer phone, String mail) {
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.phone = phone;
+        this.mail = mail;
+    }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        description = description;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        address = address;
     }
 
-    public Integer getNumber() {
-        return Number;
+    public Integer getPhone() {
+        return phone;
     }
 
-    public void setNumber(Integer number) {
-        Number = number;
+    public void setPhone(Integer phone) {
+        phone = phone;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getMail() {
+        return mail;
     }
 
-    public void setEmail(String email) {
-        Email = email;
-    }
-
-    public Fournisseur(String name, String description, String address, Integer number, String email) {
-        Name = name;
-        Description = description;
-        Address = address;
-        Number = number;
-        Email = email;
+    public void setMail(String mail) {
+        mail = mail;
     }
 }

@@ -1,5 +1,7 @@
 package com.speleize.alexl.viabrico;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,9 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurAdapter.FournisseurViewHolder> {
-
+public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHolder> {
     private List<Fournisseur> listeFournisseur = null;
+    private final FournisseursActivity fournisseursActivity;
 
 
     /**
@@ -19,15 +21,24 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurAdapter.
      * @param listeFournisseur Liste de fournisseurs
      */
 
-    public FournisseurAdapter(List<Fournisseur> listeFournisseur){
+    public FournisseurAdapter(List<Fournisseur> listeFournisseur, FournisseursActivity fournisseursActivity){
         this.listeFournisseur = listeFournisseur;
+        this.fournisseursActivity = fournisseursActivity;
+
     }
 
     @Override
     public FournisseurViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View viewFournisseur =LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fournisseur, parent, false);
+        View viewFournisseur = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fournisseur, parent, false);
+        FournisseurViewHolder fournisseurViewHolder = new FournisseurViewHolder(viewFournisseur);
         return new FournisseurViewHolder(viewFournisseur);
+    }
+
+    public class activity extends Activity {
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
     }
 
     @Override
@@ -36,8 +47,8 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurAdapter.
         holder.textViewName.setText(listeFournisseur.get(position).getName());
         holder.textViewDescription.setText(listeFournisseur.get(position).getDescription());
         holder.textViewAddress.setText(listeFournisseur.get(position).getAddress());
-        holder.textViewNumber.setText(listeFournisseur.get(position).getNumber());
-        holder.textViewMail.setText(listeFournisseur.get(position).getEmail());
+        holder.textViewNumber.setText(listeFournisseur.get(position).getPhone().toString());
+        holder.textViewMail.setText(listeFournisseur.get(position).getMail());
 
     }
 
@@ -56,50 +67,6 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurAdapter.
         listeFournisseur.add(0, fournisseur);
         notifyItemInserted(0);
     }
-
-
-        /**
-        * ViewHolder.
-        */
-
-        class FournisseurViewHolder extends RecyclerView.ViewHolder
-        {
-        TextView textViewName = null;
-        TextView textViewDescription = null;
-        TextView textViewAddress = null;
-        TextView textViewNumber = null;
-        TextView textViewMail = null;
-
-
-
-        /**
-         * Constructeur.
-         * @param itemView Vue item
-             */
-        FournisseurViewHolder(final View itemView)
-        {
-            super(itemView);
-            textViewName = itemView.findViewById(R.id.fournisseur_name);
-            textViewMail = itemView.findViewById(R.id.fournisseur_email);
-            textViewDescription = itemView.findViewById(R.id.fournisseur_description);
-            textViewNumber = itemView.findViewById(R.id.fournisseur_number);
-            textViewAddress = itemView.findViewById(R.id.fournisseur_address)
-
-
-            // listener :
-            itemView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    // récupération du context depuis une vue :
-                    Context context = itemView.getContext();
-
-
-                }
-            });
-        }
-
 }
 
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.speleize.alexl.viabrico">
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Home">
+        <activity android:name=".EditFournisseurActivity"></activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,8 +22,8 @@
         </activity>
         <activity android:name=".FournisseursActivity" />
         <activity android:name=".CreateFournisseurActivity" />
-        <activity android:name=".SelectedFournisseurAcitivy" />
-        <activity android:name=".LoggedActivity"></activity>
+        <activity android:name=".SelectedFournisseurActivity" />
+        <activity android:name=".LoggedActivity" />
     </application>
 
 </manifest>

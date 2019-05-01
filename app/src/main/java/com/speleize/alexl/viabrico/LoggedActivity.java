@@ -11,6 +11,7 @@ public class LoggedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged);
+
     }
 
     public void goToFournisseur(View view){
