@@ -67,7 +67,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:textColor="#FFF"
-        android:text="Update"
+        android:text="Mettre à jour !"
         android:textFontWeight="600"
         android:background="@drawable/buttondesign"
         android:layout_marginHorizontal="70dp"
