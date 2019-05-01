@@ -3,6 +3,7 @@ package com.speleize.alexl.viabrico;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 class FournisseurViewHolder extends RecyclerView.ViewHolder {
@@ -11,6 +12,8 @@ class FournisseurViewHolder extends RecyclerView.ViewHolder {
     TextView textViewAddress = null;
     TextView textViewNumber = null;
     TextView textViewMail = null;
+    Button editButton = null;
+    Button deleteButton = null;
 
     /**
      * Constructeur.
@@ -24,7 +27,8 @@ class FournisseurViewHolder extends RecyclerView.ViewHolder {
         textViewDescription = itemView.findViewById(R.id.description);
         textViewNumber = itemView.findViewById(R.id.number);
         textViewAddress = itemView.findViewById(R.id.address);
-
+        editButton = itemView.findViewById(R.id.editButton);
+        deleteButton = itemView.findViewById(R.id.deleteButton);
 
         // listener :
         itemView.setOnClickListener(new View.OnClickListener() {

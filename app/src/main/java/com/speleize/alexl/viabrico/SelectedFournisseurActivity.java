@@ -1,13 +1,63 @@
 package com.speleize.alexl.viabrico;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.TextHttpResponseHandler;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class SelectedFournisseurActivity extends AppCompatActivity {
+
+    private TextView name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_fournisseur_acitivy);
+
+        // Récupération du token :
+
+        SharedPreferences getToken = getSharedPreferences("prefToken", Context.MODE_PRIVATE);
+        String token = getToken.getString("token", "");
+
+
+        // Récupération de l'ID :
+
+        Intent getIntent = getIntent();
+        Integer id = getIntent.getIntExtra("idFournisseur",0);
+
+        // Vues :
+
+        name = findViewById(R.id.name);
+
+
+        Request.get("https://viabrico.herokuapp.com/suppliers/" + id , token,null,new TextHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                Log.d("response : ", responseString);
+                Gson gson = new Gson();
+                Fournisseur json = gson.fromJson(responseString, Fournisseur.class);
+                name.setText(json.getName());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("error :", responseString);
+
+            }
+
+        });
     }
 }

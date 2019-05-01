@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d("res", "res:" + responseBody);
                         Log.d("res", "Ah shit here we go again:" + responseBody);
 
-                        // SHARED PREFERENCES DE LA HOME :
 
                         // SHARED PREFERENCES :
 
