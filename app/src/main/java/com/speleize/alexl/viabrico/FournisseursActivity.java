@@ -68,7 +68,7 @@ public class FournisseursActivity extends AppCompatActivity {
                 Type listType = new TypeToken<List<Fournisseur>>(){}.getType();
                 List<Fournisseur> listeFournisseur = gson.fromJson(responseString, listType);
                 Log.d("response string :", responseString);
-                fournisseurAdapter = new FournisseurAdapter(listeFournisseur, FournisseursActivity.this);
+                fournisseurAdapter = new FournisseurAdapter(listeFournisseur, FournisseursActivity.this, token);
                 recyclerView.setAdapter(fournisseurAdapter);
             }
 

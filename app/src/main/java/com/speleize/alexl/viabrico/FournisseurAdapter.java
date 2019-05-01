@@ -2,6 +2,7 @@ package com.speleize.alexl.viabrico;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.content.Context;
@@ -13,20 +14,29 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.TextHttpResponseHandler;
+
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHolder> {
     private List<Fournisseur> listeFournisseur = null;
+    private SharedPreferences getToken;
+    public String token;
     private final FournisseursActivity fournisseursActivity;
-
 
     /**
      * Constructeur.
      * @param listeFournisseur Liste de fournisseurs
      */
 
-    public FournisseurAdapter(List<Fournisseur> listeFournisseur, FournisseursActivity fournisseursActivity){
+    public FournisseurAdapter(List<Fournisseur> listeFournisseur, FournisseursActivity fournisseursActivity, String token){
         this.listeFournisseur = listeFournisseur;
+        this.token = token;
         this.fournisseursActivity = fournisseursActivity;
 
 
@@ -44,12 +54,14 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
     public class activity extends Activity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
         }
     }
 
     @Override
     public void onBindViewHolder(FournisseurViewHolder holder, int position)
     {
+        delete(getItemParPosition(position), holder);
         edit(getItemParPosition(position), holder);
         onClick(getItemParPosition(position), holder);
         holder.textViewName.setText(listeFournisseur.get(position).getName());
@@ -101,6 +113,37 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
                 intent.putExtra("idFournisseur", fournisseur.getId());
                 Log.d("id :", fournisseur.getId().toString());
                 holder.editButton.getContext().startActivity(intent);
+
+            }
+        });
+    }
+    public void delete(final Fournisseur fournisseur, final FournisseurViewHolder holder) {
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Récupération de l'ID :
+
+                Integer id = fournisseur.getId();
+
+                Request.delete("https://viabrico.herokuapp.com/suppliers/" + id , token,null, new TextHttpResponseHandler(){
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                        Log.d("Succes : ", responseString);
+
+                        Toast.makeText(holder.deleteButton.getContext(),fournisseur.getName() + " supprimé !",LENGTH_LONG);
+                        Intent intent = new Intent(holder.deleteButton.getContext(), FournisseursActivity.class);
+                        holder.deleteButton.getContext().startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("error :", responseString);
+
+                    }
+
+                });
 
             }
         });
