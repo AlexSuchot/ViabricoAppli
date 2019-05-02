@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
@@ -90,52 +91,60 @@ public class EditFournisseurActivity extends AppCompatActivity {
                 String strDescription = editdescription.getText().toString();
                 String strMail = editmail.getText().toString();
 
+                // On vérifie que les champs ne soient pas vide :
+                if(     !isEmpty(strName) &&
+                        !isEmpty(strAddress) &&
+                        !isEmpty(strPhone) &&
+                        !isEmpty(strDescription) &&
+                        !isEmpty(strMail)) {
+                    // On vérifie que strMail est bien un mail :
+                    if (isEmailValid(strMail)) {
+                        editmail.setError(null);
 
-                // On vérifie que strMail est bien un mail :
-                if (isEmailValid(strMail)) {
-                    editmail.setError(null);
 
+                        // On vérifie que strPhone est bien un numéro :
+                        if (isNumeric(strPhone)) {
+                            editphone.setError(null);
 
-                    // On vérifie que strPhone est bien un numéro :
-                    if (isNumeric(strPhone)) {
-                        editphone.setError(null);
+                            RequestParams params = new RequestParams();
+                            params.put("name", strName);
+                            params.put("address", strAddress);
+                            params.put("phone", strPhone);
+                            params.put("description", strDescription);
+                            params.put("email", strMail);
 
-                        RequestParams params = new RequestParams();
-                        params.put("name", strName);
-                        params.put("address", strAddress);
-                        params.put("phone", strPhone);
-                        params.put("description", strDescription);
-                        params.put("email", strMail);
+                            Request.put("https://viabrico.herokuapp.com/suppliers/" + id, token, params, new TextHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, String responseBody) {
 
-                        Request.put("https://viabrico.herokuapp.com/suppliers/" + id, token, params, new TextHttpResponseHandler() {
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                                    // called when response HTTP status is "200 OK"
+                                    Log.d("res", "code: " + statusCode);
+                                    Log.d("res", "headers: " + headers.toString());
+                                    Log.d("res", "res:" + responseBody);
 
-                                // called when response HTTP status is "200 OK"
-                                Log.d("res", "code: " + statusCode);
-                                Log.d("res", "headers: " + headers.toString());
-                                Log.d("res", "res:" + responseBody);
+                                    Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
+                                    startActivity(intent);
+                                }
 
-                                Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
-                                startActivity(intent);
-                            }
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
+                                    Log.d("res", "res: " + error);
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
-                                Log.d("res", "res: " + error);
-
-                                Log.d("status code :", "status code :" + statusCode);
-                            }
-                        });
+                                    Log.d("status code :", "status code :" + statusCode);
+                                }
+                            });
+                        } else {
+                            editphone.setError("Numéro non valide !");
+                        }
                     } else {
-                        editphone.setError("Numéro non valide !");
+                        editmail.setError("Email non valide !");
                     }
                 } else {
-                    editmail.setError("Email non valide !");
+                    Toast.makeText(getApplicationContext(),"Veuillez remplir tous les champs." , Toast.LENGTH_LONG).show();
+
                 }
             }
         });
-
     }
 
     public static boolean isNumeric(String str) {
@@ -165,5 +174,14 @@ public class EditFournisseurActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    public boolean isEmpty(String value){
+        if(value.isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

@@ -12,9 +12,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Home">
-        <activity android:name=".RegisterActivity"></activity>
+
+        <activity android:name=".RegisterActivity"
+            android:theme="@style/Activities"
+            android:label="S'enregistrer"
+            android:parentActivityName=".LoginActivity">
+
+        </activity>
         <activity
             android:name=".EditFournisseurActivity"
+            android:theme="@style/Activities"
+            android:label="Editer"
             android:parentActivityName=".FournisseursActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -23,15 +31,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FournisseursActivity" />
+
+        <activity
+            android:name=".FournisseursActivity"
+            android:theme="@style/Activities"
+            android:label="Liste des fournisseurs"
+            android:parentActivityName=".LoggedActivity" />
         <activity
             android:name=".CreateFournisseurActivity"
+            android:theme="@style/Activities"
+            android:label="Créer un fournisseur"
             android:parentActivityName=".LoggedActivity" />
         <activity
             android:name=".SelectedFournisseurActivity"
+            android:theme="@style/Activities"
+            android:label="Fournisseur"
             android:parentActivityName=".FournisseursActivity" />
 
-        <activity android:name=".LoggedActivity" />
+        <activity android:name=".LoggedActivity"
+            android:theme="@style/Activities"
+            android:label="Menu"
+            android:parentActivityName=".LoginActivity"/>
     </application>
 
 </manifest>

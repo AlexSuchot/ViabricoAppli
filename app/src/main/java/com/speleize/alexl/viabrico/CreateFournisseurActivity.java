@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
@@ -58,44 +59,54 @@ public class CreateFournisseurActivity extends AppCompatActivity {
                 String strDescription = adddescription.getText().toString();
                 String strMail = addmail.getText().toString();
 
-                // On vérifie que strMail est bien un mail :
-                if (isEmailValid(strMail)) {
-                    addmail.setError(null);
-
-                    // On vérifie que strPhone est bien un numéro :
-                    if (isNumeric(strPhone)) {
-                        addphone.setError(null);
-
-                        // On récupére les paramètres à passer à la requête :
-                        RequestParams params = new RequestParams();
-                        params.put("name", strName);
-                        params.put("address", strAddress);
-                        params.put("phone", strPhone);
-                        params.put("description", strDescription);
-                        params.put("email", strMail);
+                if(     !isEmpty(strName) &&
+                        !isEmpty(strAddress) &&
+                        !isEmpty(strPhone) &&
+                        !isEmpty(strDescription) &&
+                        !isEmpty(strMail)) {
 
 
-                        Request.post("https://viabrico.herokuapp.com/suppliers/", token, params, new TextHttpResponseHandler() {
+                    // On vérifie que strMail est bien un mail :
+                    if (isEmailValid(strMail)) {
+                        addmail.setError(null);
 
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                                Log.d("response : ", responseString);
-                                Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
-                                startActivity(intent);
-                            }
+                        // On vérifie que strPhone est bien un numéro :
+                        if (isNumeric(strPhone)) {
+                            addphone.setError(null);
 
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                                Log.d("error :", responseString);
+                            // On récupére les paramètres à passer à la requête :
+                            RequestParams params = new RequestParams();
+                            params.put("name", strName);
+                            params.put("address", strAddress);
+                            params.put("phone", strPhone);
+                            params.put("description", strDescription);
+                            params.put("email", strMail);
 
-                            }
 
-                        });
+                            Request.post("https://viabrico.herokuapp.com/suppliers/", token, params, new TextHttpResponseHandler() {
+
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                    Log.d("response : ", responseString);
+                                    Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                    Log.d("error :", responseString);
+
+                                }
+
+                            });
+                        } else {
+                            addphone.setError("Numéro non valide !");
+                        }
                     } else {
-                        addphone.setError("Numéro non valide !");
+                        addmail.setError("Email non valide !");
                     }
                 } else {
-                    addmail.setError("Email non valide !");
+                    Toast.makeText(getApplicationContext(),"Veuillez remplir tous les champs." , Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -129,6 +140,15 @@ public class CreateFournisseurActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    public boolean isEmpty(String value){
+        if(value.isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }

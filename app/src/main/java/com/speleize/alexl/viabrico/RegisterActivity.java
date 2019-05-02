@@ -43,33 +43,39 @@ public class RegisterActivity extends AppCompatActivity {
                 String strPassword = addpassword.getText().toString();
                 String strMail = addmail.getText().toString();
 
-                // On vérifie que strMail est bien un mail :
-                if (isEmailValid(strMail)) {
-                    addmail.setError(null);
+                if (!isEmpty(strMail) && (!isEmpty(strPassword))) {
 
-                    // On récupére les paramètres à passer à la requête :
-                    RequestParams params = new RequestParams();
-                    params.put("email", strMail);
-                    params.put("password", strPassword);
 
-                    Request.post("https://viabrico.herokuapp.com/register", null, params, new TextHttpResponseHandler() {
+                    // On vérifie que strMail est bien un mail :
+                    if (isEmailValid(strMail)) {
+                        addmail.setError(null);
 
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                            Log.d("response : ", responseString);
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        }
+                        // On récupére les paramètres à passer à la requête :
+                        RequestParams params = new RequestParams();
+                        params.put("email", strMail);
+                        params.put("password", strPassword);
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                            Log.d("error :", responseString);
+                        Request.post("https://viabrico.herokuapp.com/register", null, params, new TextHttpResponseHandler() {
 
-                        }
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                Log.d("response : ", responseString);
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
 
-                    });
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                Log.d("error :", responseString);
+                            }
+
+                        });
+                    } else {
+                        addmail.setError("Email non valide !");
+                    }
+
                 } else {
-                    addmail.setError("Email non valide !");
+                    Toast.makeText(getApplicationContext(), "Veuillez remplir tous les champs.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -94,6 +100,14 @@ public class RegisterActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    public boolean isEmpty(String value) {
+        if (value.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

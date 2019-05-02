@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
@@ -52,50 +53,58 @@ public class LoginActivity extends AppCompatActivity {
                     findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 }
 
-                // Check for email validity :
-                if (isEmailValid(strEmail)) {
-                    RequestParams params = new RequestParams();
-                    params.put("email", strEmail);
-                    params.put("password", strPassword);
+                // On vérifie que les champs ne soient pas vide :
+                if(     !isEmpty(strEmail) &&
+                        !isEmpty(strPassword)) {
 
-                    email.setError(null);
-                    password.setError(null);
+                    // Check for email validity :
+                    if (isEmailValid(strEmail)) {
+                        RequestParams params = new RequestParams();
+                        params.put("email", strEmail);
+                        params.put("password", strPassword);
 
-                    Request.post("https://viabrico.herokuapp.com/login", null, params, new TextHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                        email.setError(null);
+                        password.setError(null);
 
-                            // called when response HTTP status is "200 OK"
+                        Request.post("https://viabrico.herokuapp.com/login", null, params, new TextHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
 
-                            Log.d("res", "code: " + statusCode);
-                            Log.d("res", "headers: " + headers.toString());
+                                // called when response HTTP status is "200 OK"
 
-                            Log.d("res", "res:" + responseBody);
+                                Log.d("res", "code: " + statusCode);
+                                Log.d("res", "headers: " + headers.toString());
+
+                                Log.d("res", "res:" + responseBody);
 
 
-                            // SHARED PREFERENCES :
+                                // SHARED PREFERENCES :
 
-                            SharedPreferences getToken;
-                            getToken = getSharedPreferences("prefToken", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = getToken.edit();
-                            editor.putString("token", responseBody.substring(1, responseBody.length() - 1));
-                            editor.apply();
+                                SharedPreferences getToken;
+                                getToken = getSharedPreferences("prefToken", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = getToken.edit();
+                                editor.putString("token", responseBody.substring(1, responseBody.length() - 1));
+                                editor.apply();
 
-                            Intent intent = new Intent(LoginActivity.this, LoggedActivity.class);
-                            LoginActivity.this.startActivity(intent);
-                        }
+                                Intent intent = new Intent(LoginActivity.this, LoggedActivity.class);
+                                LoginActivity.this.startActivity(intent);
+                            }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
-                            Log.d("res", "res: " + error);
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
+                                Log.d("res", "res: " + error);
 
-                            Log.d("status code :", "status code :" + statusCode);
-                        }
-                    });
+                                Log.d("status code :", "status code :" + statusCode);
+                                email.setError("Mauvais mail ou mot de passe !");
+                                password.setError("Mauvais mail ou mot de passe !");
+                            }
+                        });
+                    } else {
+                        email.setError("Mauvais format de mail ! ");
+
+                    }
                 } else {
-                    email.setError("Wrong email or password");
-                    password.setError("Wrong password or email");
-
+                    Toast.makeText(getApplicationContext(),"Veuillez remplir tous les champs." , Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -130,5 +139,15 @@ public class LoginActivity extends AppCompatActivity {
         else
             return false;
     }
+
+    public boolean isEmpty(String value){
+        if(value.isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }
 
