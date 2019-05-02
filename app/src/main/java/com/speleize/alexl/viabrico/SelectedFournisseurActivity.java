@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -20,6 +24,11 @@ import cz.msebera.android.httpclient.Header;
 public class SelectedFournisseurActivity extends AppCompatActivity {
 
     private TextView name;
+    private TextView description;
+    private TextView address;
+    private TextView phone;
+    private TextView email;
+    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,11 @@ public class SelectedFournisseurActivity extends AppCompatActivity {
         // Vues :
 
         name = findViewById(R.id.name);
-
+        description = findViewById(R.id.description);
+        address = findViewById(R.id.address);
+        phone = findViewById(R.id.phone);
+        email = findViewById(R.id.email);
+        backButton = findViewById(R.id.back);
 
         Request.get("https://viabrico.herokuapp.com/suppliers/" + id , token,null,new TextHttpResponseHandler(){
 
@@ -50,6 +63,19 @@ public class SelectedFournisseurActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 Fournisseur json = gson.fromJson(responseString, Fournisseur.class);
                 name.setText(json.getName());
+                description.setText(json.getDescription());
+                address.setText(json.getAddress());
+                phone.setText(json.getPhone().toString());
+                email.setText(json.getMail());
+
+                backButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
+                        startActivity(intent);
+
+                    }
+                });
             }
 
             @Override
@@ -57,7 +83,6 @@ public class SelectedFournisseurActivity extends AppCompatActivity {
                 Log.d("error :", responseString);
 
             }
-
         });
     }
 }

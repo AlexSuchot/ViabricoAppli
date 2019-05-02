@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
+    android:layout_marginTop="20dp"
     android:orientation="horizontal">
 
 
@@ -18,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:textColor="@android:color/black"
+            android:textColor="#1bbc9b"
             android:textSize="@dimen/main_taille_intitule_memo" />
 
         <TextView
@@ -57,14 +58,14 @@
             android:onClick="goToEdit"
             android:textColor="#FFF"
             android:layout_marginRight="15dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@drawable/buttondesign"/>
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Delete"
             android:textColor="#FFF"
-            android:background="@color/colorPrimary"/>
+            android:background="@drawable/buttondesign"/>
 
 
     </LinearLayout>

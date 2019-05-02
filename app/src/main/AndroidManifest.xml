@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Home">
-        <activity android:name=".EditFournisseurActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity
+            android:name=".EditFournisseurActivity"
+            android:parentActivityName=".FournisseursActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +24,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".FournisseursActivity" />
-        <activity android:name=".CreateFournisseurActivity" />
-        <activity android:name=".SelectedFournisseurActivity" />
+        <activity
+            android:name=".CreateFournisseurActivity"
+            android:parentActivityName=".LoggedActivity" />
+        <activity
+            android:name=".SelectedFournisseurActivity"
+            android:parentActivityName=".FournisseursActivity" />
+
         <activity android:name=".LoggedActivity" />
     </application>
 

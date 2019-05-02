@@ -5,15 +5,15 @@ public class Fournisseur {
     private String description;
     private String address;
     private Integer phone;
-    private String mail;
+    private String email;
     private Integer id;
 
-    public Fournisseur(String name, String description, String address, Integer phone, String mail, Integer id) {
+    public Fournisseur(String name, String description, String address, Integer phone, String email, Integer id) {
         this.name = name;
         this.description = description;
         this.address = address;
         this.phone = phone;
-        this.mail = mail;
+        this.email = email;
         this.id = id;
     }
 
@@ -50,11 +50,11 @@ public class Fournisseur {
     }
 
     public String getMail() {
-        return mail;
+        return email;
     }
 
-    public void setMail(String mail) {
-        mail = mail;
+    public void setMail(String email) {
+        email = email;
     }
 
 

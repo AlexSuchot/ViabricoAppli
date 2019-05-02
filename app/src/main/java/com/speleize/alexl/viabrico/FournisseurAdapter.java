@@ -65,7 +65,7 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
         edit(getItemParPosition(position), holder);
         onClick(getItemParPosition(position), holder);
         holder.textViewName.setText(listeFournisseur.get(position).getName());
-        holder.textViewDescription.setText(listeFournisseur.get(position).getDescription());
+        //holder.textViewDescription.setText(listeFournisseur.get(position).getDescription());
         holder.textViewAddress.setText(listeFournisseur.get(position).getAddress());
         holder.textViewNumber.setText(listeFournisseur.get(position).getPhone().toString());
         holder.textViewMail.setText(listeFournisseur.get(position).getMail());

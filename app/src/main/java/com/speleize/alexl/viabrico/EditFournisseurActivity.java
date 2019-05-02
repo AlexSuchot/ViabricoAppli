@@ -14,6 +14,9 @@ import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import cz.msebera.android.httpclient.Header;
 
 public class EditFournisseurActivity extends AppCompatActivity {
@@ -48,10 +51,10 @@ public class EditFournisseurActivity extends AppCompatActivity {
         // Récupération de l'ID :
 
         Intent getIntent = getIntent();
-        Integer id = getIntent.getIntExtra("idFournisseur",0);
+        Integer id = getIntent.getIntExtra("idFournisseur", 0);
 
 
-        Request.get("https://viabrico.herokuapp.com/suppliers/" + id , token,null,new TextHttpResponseHandler(){
+        Request.get("https://viabrico.herokuapp.com/suppliers/" + id, token, null, new TextHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -87,35 +90,80 @@ public class EditFournisseurActivity extends AppCompatActivity {
                 String strDescription = editdescription.getText().toString();
                 String strMail = editmail.getText().toString();
 
-                RequestParams params = new RequestParams();
-                params.put("name", strName);
-                params.put("address", strAddress);
-                params.put("phone", strPhone);
-                params.put("description", strDescription);
-                params.put("mail", strMail);
 
-                Request.put("https://viabrico.herokuapp.com/suppliers/"+ id, token, params, new TextHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+                // On vérifie que strMail est bien un mail :
+                if (isEmailValid(strMail)) {
+                    editmail.setError(null);
 
-                        // called when response HTTP status is "200 OK"
-                        Log.d("res", "code: " + statusCode);
-                        Log.d("res", "headers: " + headers.toString());
-                        Log.d("res", "res:" + responseBody);
 
-                        Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
-                        startActivity(intent);
+                    // On vérifie que strPhone est bien un numéro :
+                    if (isNumeric(strPhone)) {
+                        editphone.setError(null);
+
+                        RequestParams params = new RequestParams();
+                        params.put("name", strName);
+                        params.put("address", strAddress);
+                        params.put("phone", strPhone);
+                        params.put("description", strDescription);
+                        params.put("email", strMail);
+
+                        Request.put("https://viabrico.herokuapp.com/suppliers/" + id, token, params, new TextHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, String responseBody) {
+
+                                // called when response HTTP status is "200 OK"
+                                Log.d("res", "code: " + statusCode);
+                                Log.d("res", "headers: " + headers.toString());
+                                Log.d("res", "res:" + responseBody);
+
+                                Intent intent = new Intent(getApplicationContext(), FournisseursActivity.class);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
+                                Log.d("res", "res: " + error);
+
+                                Log.d("status code :", "status code :" + statusCode);
+                            }
+                        });
+                    } else {
+                        editphone.setError("Numéro non valide !");
                     }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseBody, Throwable error) {
-                        Log.d("res", "res: " + error);
-
-                        Log.d("status code :", "status code :" + statusCode);
-                    }
-                });
+                } else {
+                    editmail.setError("Email non valide !");
+                }
             }
         });
 
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean isEmailValid(String email) {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(regExpn, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        if (matcher.matches())
+            return true;
+        else
+            return false;
     }
 }
