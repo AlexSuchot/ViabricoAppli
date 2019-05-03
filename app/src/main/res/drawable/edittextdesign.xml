@@ -5,6 +5,13 @@
         android:radius="6dp"/>
     <solid
         android:color="#2e3339"/>
+    <padding
+
+        android:left="12dp"
+        android:top="12dp"
+        android:right="12dp"
+        android:bottom="12dp"
+        />
 
 
 </shape>

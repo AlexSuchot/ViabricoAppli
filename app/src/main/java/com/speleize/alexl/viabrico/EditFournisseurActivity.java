@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -145,6 +147,23 @@ public class EditFournisseurActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //ajoute les entrées de menu_test à l'ActionBar
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout:
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public static boolean isNumeric(String str) {

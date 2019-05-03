@@ -1,15 +1,17 @@
 package com.speleize.alexl.viabrico;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -65,9 +67,11 @@ public class FournisseursActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                // On récupère tous les fournisseurs :
                 Type listType = new TypeToken<List<Fournisseur>>(){}.getType();
                 List<Fournisseur> listeFournisseur = gson.fromJson(responseString, listType);
                 Log.d("response string :", responseString);
+                // On ajoute la liste des fournisseurs dans le recycler view :
                 fournisseurAdapter = new FournisseurAdapter(listeFournisseur, FournisseursActivity.this, token);
                 recyclerView.setAdapter(fournisseurAdapter);
             }
@@ -79,5 +83,22 @@ public class FournisseursActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //ajoute les entrées de menu_test à l'ActionBar
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.logout:
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
