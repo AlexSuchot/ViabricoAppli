@@ -1,20 +1,18 @@
 package com.speleize.alexl.viabrico;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import java.util.List;
@@ -61,9 +59,12 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
     @Override
     public void onBindViewHolder(FournisseurViewHolder holder, int position)
     {
+        // On ajoute les méthodes delete/edit/onClick sur chaque item du recycler view :
         delete(getItemParPosition(position), holder);
         edit(getItemParPosition(position), holder);
         onClick(getItemParPosition(position), holder);
+
+        // On attribue au view holder les valeurs qui correspondent à chaque élément de la base de données :
         holder.textViewName.setText(listeFournisseur.get(position).getName());
         //holder.textViewDescription.setText(listeFournisseur.get(position).getDescription());
         holder.textViewAddress.setText(listeFournisseur.get(position).getAddress());
@@ -89,6 +90,7 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
 
 
 
+    // Affiche les détails propre à l'item cliqué :
     public void onClick(final Fournisseur fournisseur, final FournisseurViewHolder holder) {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +107,7 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
 
     }
 
+    // Permet de modifier l'élément lorsqu'on clique sur "modifier" :
     public void edit(final Fournisseur fournisseur, final FournisseurViewHolder holder) {
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +120,8 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
             }
         });
     }
+
+    // Supprime l'élément :
     public void delete(final Fournisseur fournisseur, final FournisseurViewHolder holder) {
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,24 +131,47 @@ public class FournisseurAdapter extends RecyclerView.Adapter<FournisseurViewHold
 
                 Integer id = fournisseur.getId();
 
-                Request.delete("https://viabrico.herokuapp.com/suppliers/" + id , token,null, new TextHttpResponseHandler(){
+                // Boite de dialogue pour pouvoir annuler la suppression d'un fournisseur :
+                AlertDialog.Builder builder = new AlertDialog.Builder(holder.deleteButton.getContext());
+                builder.setCancelable(true);
+                builder.setTitle("Confirmer");
+                builder.setMessage("Etes vous sûr de vouloir supprimer " + fournisseur.getName() + " ?");
+                builder.setPositiveButton("Oui",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                                Request.delete("https://viabrico.herokuapp.com/suppliers/" + id , token,null, new TextHttpResponseHandler(){
+
+                                    @Override
+                                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                                        Log.d("Succes : ", responseString);
+
+                                        Toast.makeText(holder.deleteButton.getContext(),fournisseur.getName() + " supprimé !",LENGTH_LONG);
+                                        Intent intent = new Intent(holder.deleteButton.getContext(), FournisseursActivity.class);
+                                        holder.deleteButton.getContext().startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        Log.d("error :", responseString);
+
+                                    }
+
+                                });
+
+                            }
+                        });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                        Log.d("Succes : ", responseString);
-
-                        Toast.makeText(holder.deleteButton.getContext(),fournisseur.getName() + " supprimé !",LENGTH_LONG);
-                        Intent intent = new Intent(holder.deleteButton.getContext(), FournisseursActivity.class);
-                        holder.deleteButton.getContext().startActivity(intent);
+                    public void onClick(DialogInterface dialog, int which) {
                     }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                        Log.d("error :", responseString);
-
-                    }
-
                 });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
 
             }
         });
