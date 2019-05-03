@@ -61,5 +61,4 @@ Request.delete("https://viabrico.herokuapp.com/suppliers/" + id , token,null, ne
 ```
 
 
-
-
+Le projet dans sa globalité (API, Site web, Application Androïd) a été réalisé par Marceau DAVID, Alexandre SUCHOT, Corentin GUILLARD, Camille GUERIN.
